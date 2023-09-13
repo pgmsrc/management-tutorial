@@ -3,6 +3,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 5000;
+const fs = require('fs');
+const mysql = require('mysql');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -36,5 +38,25 @@ app.get('/api/customers', (req, res) => {
           }
     ]);
 });
+
+const data = fs.readFileSync('./database.json');
+const conf = JSON.parse(data);
+
+app.get('/api/city', function(req, res){
+    const db = mysql.createConnection({
+        host: conf.host,
+        user: conf.user, 
+        port: conf.port,
+        password: conf.password,
+        database : conf.database
+    });
+    
+    const sqlQuery = 'select * from world.city where CountryCode = "KOR" and District = "Kyonggi"';
+    db.query(sqlQuery, function (err, result) {
+        console.log('result',result);
+        res.send(result);
+    });
+});
+
 
 app.listen(port, () => console.log(`Listeing on port: ${port}`));
