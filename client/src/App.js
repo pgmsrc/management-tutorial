@@ -5,35 +5,19 @@ import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-
-const customers = [
-  {
-    'id': 1,
-    'image': 'https://loremflickr.com/64/64/1',
-    'name': '김지애',
-    'birthday': '761112',
-    'gender': '여자',
-    'job': '메니저'
-    },
-  {
-    'id': 2,
-    'image': 'https://loremflickr.com/64/64/2',
-    'name': '서준혁',
-    'birthday': '030318',
-    'gender': '남자',
-    'job': '대학생'
-  },
-  {
-    'id': 3,
-    'image': 'https://loremflickr.com/64/64/3',
-    'name': '서웅교',
-    'birthday': '700429',
-    'gender': '남자',
-    'job': '개발자'
-  }
-]
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  const url = "http://localhost:5000/api/customers";
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch(url)
+    .then(response => response.json())
+    .then(data => setData(data))
+    .catch(error => console.error(error));
+  }, [url])
+
   return (
     <Paper> 
       <Table>
@@ -48,9 +32,9 @@ function App() {
           </TableRow>
         </TableHead>
       </Table>
-        {customers.map(customer => { return ( <Customer key={customer.id}
+        {data.map((customer) => { return (<Customer key={customer.id}
           id={customer.id} image={customer.image} name={customer.name} birthday={customer.birthday} gender={customer.gender} job={customer.job}
-          /> );
+          />);
         })}
     </Paper>
   );
